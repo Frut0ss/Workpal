@@ -15,11 +15,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Simulate adding job to system (Replace this with actual logic)
     $jobAddedSuccessfully = true;
 
-    // Prepare JSON response
-    $response = [
-        'success' => $jobAddedSuccessfully,
-        'message' => $jobAddedSuccessfully ? 'Job added successfully' : 'Failed to add job'
-    ];
+    // Prepare JSON response with success status and added parameters
+    if ($jobAddedSuccessfully) {
+        $addedParams = [
+            'jobTitle' => $jobTitle,
+            'jobDescription' => $jobDescription,
+            'jobEstHours' => $jobEstHours,
+            'entryDate' => $entryDate,
+            'scheduleStartDate' => $scheduleStartDate,
+            'scheduleEndDate' => $scheduleEndDate
+        ];
+
+        $response = [
+            'success' => true,
+            'message' => 'Job added successfully',
+            'addedParams' => $addedParams
+        ];
+    } else {
+        $response = [
+            'success' => false,
+            'message' => 'Failed to add job'
+        ];
+    }
 
     // Return JSON response
     header('Content-Type: application/json');
