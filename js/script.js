@@ -28,6 +28,16 @@ $(document).ready(function() {
                 } else {
                     messageContainer.text(response.message).removeClass('success').addClass('error');
                     addedParamsContainer.empty(); // Clear added parameters in case of error
+
+                    // Display errors if available
+                    if (response.errors && response.errors.length > 0) {
+                        let errorsList = '<ul>';
+                        response.errors.forEach(function(error) {
+                            errorsList += '<li>' + error + '</li>';
+                        });
+                        errorsList += '</ul>';
+                        messageContainer.after(errorsList);
+                    }
                 }
             },
             error: function(xhr, status, error) {
