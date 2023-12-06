@@ -10,12 +10,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $scheduleEndDate = $_POST['scheduleEndDate'];
 
     // Validate form inputs
-    // Perform any necessary validation here
+    $isValid = true;
+    $errors = [];
+
+    // Check if Schedule Start Date is populated and validate against Schedule End Date
+    if (!empty($scheduleStartDate) && !empty($scheduleEndDate)) {
+        $startTimestamp = strtotime($scheduleStartDate);
+        $endTimestamp = strtotime($scheduleEndDate);
+
+        if ($startTimestamp > $endTimestamp) {
+            $isValid = false;
+            $errors[] = "Schedule Start Date cannot be after Schedule End Date.";
+        }
+    }
+
+    // Check if Schedule End Date is populated and validate against Schedule Start Date
+    if (!empty($scheduleStartDate) && !empty($scheduleEndDate)) {
+        $startTimestamp = strtotime($scheduleStartDate);
+        $endTimestamp = strtotime($scheduleEndDate);
+
+        if ($endTimestamp < $startTimestamp) {
+            $isValid = false;
+            $errors[] = "Schedule End Date cannot be before Schedule Start Date.";
+        }
+    }
 
     // Simulate adding job to system (Replace this with actual logic)
-    $jobAddedSuccessfully = true;
+    $jobAddedSuccessfully = $isValid; // Consider the job added only if the validation passed
 
-    // Prepare JSON response with success status and added parameters
+    // Prepare JSON response with success status and added parameters or errors
     if ($jobAddedSuccessfully) {
         $addedParams = [
             'jobTitle' => $jobTitle,
@@ -34,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $response = [
             'success' => false,
-            'message' => 'Failed to add job'
+            'message' => 'Failed to add job',
+            'errors' => $errors
         ];
     }
 
