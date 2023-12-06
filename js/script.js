@@ -3,10 +3,10 @@ $(document).ready(function() {
         event.preventDefault();
 
         // Comment the date validation if needed to deactivate it
-         if (!validateDates()) {
-             displayErrorMessage('Invalid date range: Schedule Start Date must be before Schedule End Date.');
-             return;
-         }
+        if (!validateDates()) {
+            displayErrorMessage('Invalid date range: Schedule Start Date must be before Schedule End Date.');
+            return;
+        }
 
         let formData = $(this).serialize();
 
@@ -23,19 +23,20 @@ $(document).ready(function() {
                 let addedParamsContainer = $('#addedParams');
 
                 if (response.success) {
-                    messageContainer.text(response.message).removeClass('error').addClass('success');
-                    addedParamsContainer.text(JSON.stringify(response.addedParams, null, 2)).removeClass('error').addClass('success');
+                    messageContainer.text(response.message).removeClass('error').addClass('success').show();
+                    addedParamsContainer.text(JSON.stringify(response.addedParams, null, 2)).removeClass('error').addClass('success').show();
                 } else {
-                    messageContainer.text(response.message).removeClass('success').addClass('error');
-                    addedParamsContainer.empty(); // Clear parameters in case of error
+                    messageContainer.text(response.message).removeClass('success').addClass('error').show();
+                    addedParamsContainer.empty().hide();// Clear parameters in case of error
                 }
             },
-            error: function(xhr, status, error) {
+            error: function(xhr, status, error) { 
                 // Handle errors returned by the server
                 console.error(xhr.responseText);
 
                 let messageContainer = $('#responseMessage');
-                messageContainer.text('Server Error: Unable to process the request').removeClass('success').addClass('error');
+                messageContainer.text('Server Error: Unable to process the request').removeClass('success').addClass('error').show();
+                $('#addedParams').empty().hide();
             }
         });
     });
