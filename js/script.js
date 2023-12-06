@@ -32,9 +32,9 @@ $(document).ready(function() {
                     // Display errors if available
                     if (response.errors && response.errors.length > 0) {
                         let errorsList = '<ul>';
-                        response.errors.forEach(function(error) {
-                            errorsList += '<li>' + error + '</li>';
-                        });
+                        // Concatenate errors into a single message
+                        let combinedError = "Invalid date range: Schedule Start Date must be before Schedule End Date.";
+                        errorsList += '<li>' + combinedError + '</li>';
                         errorsList += '</ul>';
                         messageContainer.after(errorsList);
                     }
