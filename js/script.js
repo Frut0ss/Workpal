@@ -2,47 +2,40 @@ $(document).ready(function() {
     $('#jobForm').submit(function(event) {
         event.preventDefault();
 
-        // Perform client-side validation here
-        if (!validateDates()) {
-            // Dates are not valid, display an error message or handle it accordingly
-            displayErrorMessage('Invalid date range: Schedule Start Date must be before Schedule End Date.');
-            return;
-        }
+        // Comment the date validation if needed to deactivate it
+         if (!validateDates()) {
+             displayErrorMessage('Invalid date range: Schedule Start Date must be before Schedule End Date.');
+             return;
+         }
 
-        // Prepare data to be sent
         let formData = $(this).serialize();
 
-        // Make AJAX request to the server
         $.ajax({
             type: 'POST',
             url: 'add_job.php',
             data: formData,
             dataType: 'json',
             success: function(response) {
-                // Handle server response here
+                // Handle successful response from the server
                 console.log(response);
 
-                // Show success or error message to the user
                 let messageContainer = $('#responseMessage');
                 let addedParamsContainer = $('#addedParams');
 
                 if (response.success) {
                     messageContainer.text(response.message).removeClass('error').addClass('success');
-                    // Show added parameters
                     addedParamsContainer.text(JSON.stringify(response.addedParams, null, 2)).removeClass('error').addClass('success');
                 } else {
                     messageContainer.text(response.message).removeClass('success').addClass('error');
-                    addedParamsContainer.empty(); // Clear added parameters in case of error
-
-                    // Display errors if available
-                    if (response.errors && response.errors.length > 0) {
-                        displayErrorMessage('Invalid date range: Schedule Start Date must be before Schedule End Date.');
-                    }
+                    addedParamsContainer.empty(); // Clear parameters in case of error
                 }
             },
             error: function(xhr, status, error) {
-                // Handle AJAX errors here
+                // Handle errors returned by the server
                 console.error(xhr.responseText);
+
+                let messageContainer = $('#responseMessage');
+                messageContainer.text('Server Error: Unable to process the request').removeClass('success').addClass('error');
             }
         });
     });
@@ -69,11 +62,11 @@ $(document).ready(function() {
     function displayErrorMessage(message) {
         // Show error message for 5 seconds and then hide
         let errorElement = $('<div class="error-message">' + message + '</div>');
-        $('#jobForm').prepend(errorElement);
+        $('#jobForm').append(errorElement); // Change prepend to append
         setTimeout(function() {
             errorElement.fadeOut('slow', function() {
                 $(this).remove();
             });
         }, 5000);
-    }
+    }    
 });
