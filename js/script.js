@@ -19,11 +19,15 @@ $(document).ready(function() {
 
                 // Show success or error message to the user
                 let messageContainer = $('#responseMessage');
+                let addedParamsContainer = $('#addedParams');
 
                 if (response.success) {
                     messageContainer.text(response.message).removeClass('error').addClass('success');
+                    // Show added parameters
+                    addedParamsContainer.text(JSON.stringify(response.addedParams, null, 2)).removeClass('error').addClass('success');
                 } else {
                     messageContainer.text(response.message).removeClass('success').addClass('error');
+                    addedParamsContainer.empty(); // Clear added parameters in case of error
                 }
             },
             error: function(xhr, status, error) {
