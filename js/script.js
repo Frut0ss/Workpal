@@ -2,7 +2,11 @@ $(document).ready(function() {
     $('#jobForm').submit(function(event) {
         event.preventDefault();
 
-        // Perform client-side validation here if needed
+        // Perform client-side validation here
+        if (!validateDates()) {
+            // Dates are not valid, display an error message or handle it accordingly
+            return;
+        }
 
         // Prepare data to be sent
         let formData = $(this).serialize();
@@ -46,4 +50,25 @@ $(document).ready(function() {
             }
         });
     });
+
+    function validateDates() {
+        // Get Schedule Start Date and End Date values
+        let startDateValue = $('#scheduleStartDate').val();
+        let endDateValue = $('#scheduleEndDate').val();
+
+        // Check if both dates are not empty
+        if (startDateValue && endDateValue) {
+            // Convert dates to Date objects for comparison
+            let startDate = new Date(startDateValue);
+            let endDate = new Date(endDateValue);
+
+            // Validate if Start Date is before End Date
+            if (startDate > endDate) {
+                // Display an error message or handle the validation failure
+                alert('Schedule Start Date cannot be after Schedule End Date.');
+                return false; // Dates are not valid
+            }
+        }
+        return true; // Dates are valid
+    }
 });
