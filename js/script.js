@@ -5,6 +5,7 @@ $(document).ready(function() {
         // Perform client-side validation here
         if (!validateDates()) {
             // Dates are not valid, display an error message or handle it accordingly
+            displayErrorMessage('Invalid date range: Schedule Start Date must be before Schedule End Date.');
             return;
         }
 
@@ -35,12 +36,7 @@ $(document).ready(function() {
 
                     // Display errors if available
                     if (response.errors && response.errors.length > 0) {
-                        let errorsList = '<ul>';
-                        // Concatenate errors into a single message
-                        let combinedError = "Invalid date range: Schedule Start Date must be before Schedule End Date.";
-                        errorsList += '<li>' + combinedError + '</li>';
-                        errorsList += '</ul>';
-                        messageContainer.after(errorsList);
+                        displayErrorMessage('Invalid date range: Schedule Start Date must be before Schedule End Date.');
                     }
                 }
             },
@@ -64,11 +60,20 @@ $(document).ready(function() {
 
             // Validate if Start Date is before End Date
             if (startDate > endDate) {
-                // Display an error message or handle the validation failure
-                alert('Schedule Start Date cannot be after Schedule End Date.');
                 return false; // Dates are not valid
             }
         }
         return true; // Dates are valid
+    }
+
+    function displayErrorMessage(message) {
+        // Show error message for 5 seconds and then hide
+        let errorElement = $('<div class="error-message">' + message + '</div>');
+        $('#jobForm').prepend(errorElement);
+        setTimeout(function() {
+            errorElement.fadeOut('slow', function() {
+                $(this).remove();
+            });
+        }, 5000);
     }
 });
